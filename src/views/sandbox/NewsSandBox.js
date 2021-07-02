@@ -16,7 +16,7 @@ import { Layout } from 'antd'
 const { Content } = Layout
 export default function NewsSandBox() {
     return (
-        <div>
+        
             <Layout>
                 <SideMenu />
                 <Layout className="site-layout">
@@ -39,8 +39,6 @@ export default function NewsSandBox() {
                         </Switch>
                     </Content>
                 </Layout>
-            </Layout>
-
-        </div>
+            </Layout>        
     )
 }

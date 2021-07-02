@@ -8,7 +8,7 @@ function App() {
           .then(res => console.log(res))
           .catch(err => console.log(err))
   },[])
-  return <div><IndexRouter></IndexRouter></div>
+  return <IndexRouter></IndexRouter>
 }
 
 export default App;
