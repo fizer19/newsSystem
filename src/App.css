@@ -1,1 +1,6 @@
 @import '~antd/dist/antd.css';
+
+::-webkit-scrollbar {width: 5px;}
+::-webkit-scrollbar-thumb {
+    background-color: orange;
+}
