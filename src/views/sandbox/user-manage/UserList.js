@@ -11,9 +11,13 @@ export default function UserList() {
     const [regionsList, setRegionsList] = useState([])
     //角色列表
     const [rolesList, setRolesList] = useState([])
+
+    const [currentItem, setCurrentItem] = useState(null)
     //对话框是否可见
     const [isAddVisible, setAddVisible] = useState(false)
     const [isEditVisible, setEditVisible] = useState(false)
+    //区域选择是否禁用
+    const [regionDisable, setRegionDisable] = useState(false)
     useEffect(() => {
         getUserList()
         getRegionList()
@@ -53,6 +57,23 @@ export default function UserList() {
         {
             title: '区域',
             dataIndex: 'region',
+
+            filters: [
+                ...regionsList.map(item=>({
+                    text:item.title,
+                    value: item.value
+                })),
+                {
+                    text: '全球',
+                    value: '全球'
+                }
+            ],
+            onFilter:(value,item) =>{
+                if(value === '全球') {
+                    return item.region === ''
+                }
+                return item.region === value
+            },
             render: (region) => {
                 return <strong>{region === '' ? '全球' : region}</strong>
             }
@@ -128,9 +149,17 @@ export default function UserList() {
 
     //点击编辑
     const onEditClick  = (item) => {
+        console.log(item);
+        setCurrentItem(item)
         //状态更新并不保证是同步的，将操作放在一个异步函数中，就能保证同步执行
         setTimeout(()=>{
-
+            if(item.roleId === 1) {
+                console.log('1');
+                setRegionDisable(true)
+            }else {
+                console.log('0');
+                setRegionDisable(false)
+            }
             setEditVisible(true)
             editFormRef.current.setFieldsValue(item)
         },0)
@@ -164,13 +193,9 @@ export default function UserList() {
 
             editFormRef.current.validateFields().then(values => {
                 
-                console.log("success", values);
-                axios.post(`http://localhost:8000/users`, {
-                    ...values,
-                    "roleState": true,
-                    "default": values.roleId === 1 ? true : false,
-                }).then(res => {
-                    console.log('添加成功', res);
+                console.log(values);
+                axios.patch(`http://localhost:8000/users/${currentItem.id}`, values).then(res => {
+                    console.log('更新成功', res);
                     getUserList()
                     setEditVisible(false)
                 })
@@ -205,12 +230,12 @@ export default function UserList() {
                 title="编辑用户"
                 okText="确认"
                 cancelText="取消"
-                onCancel={() => {
+                onCancel={() => {                   
                     setEditVisible(false)
                 }}
                 onOk={editFromOk}
             >
-                <UserForm ref={editFormRef} rolesList={rolesList} regionsList={regionsList}></UserForm>
+                <UserForm ref={editFormRef} rolesList={rolesList} regionsList={regionsList} regionDisable={regionDisable}></UserForm>
             </Modal>
         </div>
     )

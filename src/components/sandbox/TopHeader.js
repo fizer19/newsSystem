@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Layout,Dropdown,Menu, Avatar } from 'antd'
+import {withRouter} from 'react-router-dom'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   UserOutlined
 } from '@ant-design/icons';
 const { Header } = Layout
-export default function TopHeader() {
+function TopHeader(props) {
   const [collapsed, setCollapsed] = useState(false)
   const changeCollapsed = () => {
     setCollapsed(!collapsed)
@@ -15,7 +16,13 @@ export default function TopHeader() {
   const menu = (
     <Menu >
       <Menu.Item key="1">超级管理员</Menu.Item>
-      <Menu.Item key="2" danger>退出</Menu.Item>
+      <Menu.Item key="2" danger onClick={
+        ()=>{
+          console.log('out',props);
+          localStorage.removeItem('token')
+          props.history.replace('/login')
+        }
+      }>退出</Menu.Item>
     </Menu>
   );
   return (
@@ -38,3 +45,4 @@ export default function TopHeader() {
     </Header>
   )
 }
+export default withRouter(TopHeader)

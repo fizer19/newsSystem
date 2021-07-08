@@ -1,0 +1,22 @@
+.login_container {
+    height: 100%;
+    background: rgb(35,39,65);
+    .form_container {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+        width: 500px;
+        height: 300px;
+        padding: 20px;
+        background: rgba(0,0,0,.7);
+        z-index: 100;
+        .login_title {
+            text-align: center;
+            height: 80px;
+            line-height: 80px;
+            font-size: 30px;
+            color: white;
+        }
+    }
+}
