@@ -13,12 +13,12 @@ function TopHeader(props) {
     setCollapsed(!collapsed)
   }
 
+  const {role:{roleName},username} = JSON.parse(localStorage.getItem('token'))
   const menu = (
     <Menu >
-      <Menu.Item key="1">超级管理员</Menu.Item>
+      <Menu.Item key="1">{roleName}</Menu.Item>
       <Menu.Item key="2" danger onClick={
         ()=>{
-          console.log('out',props);
           localStorage.removeItem('token')
           props.history.replace('/login')
         }
@@ -35,7 +35,7 @@ function TopHeader(props) {
         collapsed ? <MenuUnfoldOutlined onClick={changeCollapsed} /> : <MenuFoldOutlined onClick={changeCollapsed} />
       }
       <div style={{float:"right"}}>
-        <span style={{marginRight: '10px'}}>欢迎回来admin</span>
+        <span style={{marginRight: '10px'}}>欢迎回来<span style={{color:'#1890ff'}}>{username}</span></span>
         <Dropdown
           overlay={menu}
         >

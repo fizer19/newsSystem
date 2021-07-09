@@ -1,6 +1,7 @@
 .login_container {
     height: 100%;
     background: rgb(35,39,65);
+    overflow: hidden;
     .form_container {
         position: fixed;
         left: 50%;
@@ -17,6 +18,9 @@
             line-height: 80px;
             font-size: 30px;
             color: white;
+        }
+        .login-form-button {
+            text-align: center;
         }
     }
 }

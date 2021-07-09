@@ -18,21 +18,29 @@ export default function UserList() {
     const [isEditVisible, setEditVisible] = useState(false)
     //区域选择是否禁用
     const [regionDisable, setRegionDisable] = useState(false)
+    const {roleId,username,region} = JSON.parse(localStorage.getItem('token'))
     useEffect(() => {
         getUserList()
         getRegionList()
         getRolesList()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     //添加用户ref
     const addFormRef = useRef(null)
     //编辑用户ref
     const editFormRef = useRef(null)
+
+    
     //获取用户数据
     const getUserList = () => {
-
+        //roleId 1超级管理员 2区域管理员 3区域编辑
         axios.get('http://localhost:8000/users?_expand=role').then(res => {
-
-            setDataSource(res.data)
+            //正常应该由后端返回角色可以看到的用户列表，但是这里是json-serve,所以需要自己筛选
+            const list = res.data
+            setDataSource(roleId===1?list:[
+                ...list.filter(item=>item.username===username),
+                ...list.filter(item=>item.region===region&&item.roleId===3)
+            ])
         })
     }
     //获取权限列表
@@ -43,11 +51,12 @@ export default function UserList() {
             setRegionsList(res.data)
         })
     }
+    
     //获取角色列表
     const getRolesList = () => {
 
         axios.get('http://localhost:8000/roles').then(res => {
-
+            
             setRolesList(res.data)
         })
     }
@@ -235,7 +244,7 @@ export default function UserList() {
                 }}
                 onOk={editFromOk}
             >
-                <UserForm ref={editFormRef} rolesList={rolesList} regionsList={regionsList} regionDisable={regionDisable}></UserForm>
+                <UserForm isEdit={true} ref={editFormRef} rolesList={rolesList} regionsList={regionsList} regionDisable={regionDisable}></UserForm>
             </Modal>
         </div>
     )

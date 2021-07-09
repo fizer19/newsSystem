@@ -15,13 +15,13 @@ export default function RoleList() {
     }, [])
     const getRolesData = () => {
         axios.get('http://localhost:8000/roles').then(res => {
-            console.log(res);
+            // console.log(res);
             setDataSource(res.data)
         }).catch(err => console.log(err))
     }
     const getRightsData = () => {
         axios.get('http://localhost:8000/rights?_embed=children').then(res => {
-            console.log(res);
+            // console.log(res);
             setRightsList(res.data)
         }).catch(err => console.log(err))
     }

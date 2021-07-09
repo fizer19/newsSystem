@@ -26,9 +26,11 @@ function SideMenu(props) {
       setMenu(res.data)
     })
   },[])
-  //pagepermisson属性决定是否展示到菜单
+  const {role:{rights}} = JSON.parse(localStorage.getItem('token'))
+  
   const hasPagepermisson = (item) => {
-    return item.pagepermisson===1
+    //pagepermisson标识是否是列表页，rights.includes(item.key)表示后台返回的角色权限列表中是否包含了当前item的key值
+    return item.pagepermisson===1 && rights.includes(item.key)
   }
   const renderMenu = (menuList) => {
     //对后端返回的权限列表遍历
