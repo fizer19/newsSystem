@@ -14,13 +14,13 @@ export default function RoleList() {
         getRightsData()
     }, [])
     const getRolesData = () => {
-        axios.get('http://localhost:8000/roles').then(res => {
+        axios.get('/roles').then(res => {
             // console.log(res);
             setDataSource(res.data)
         }).catch(err => console.log(err))
     }
     const getRightsData = () => {
-        axios.get('http://localhost:8000/rights?_embed=children').then(res => {
+        axios.get('/rights?_embed=children').then(res => {
             // console.log(res);
             setRightsList(res.data)
         }).catch(err => console.log(err))
@@ -71,7 +71,7 @@ export default function RoleList() {
         //修改当前页面状态+后端同步
 
         // setDataSource(dataSource.filter(data => data.id !== item.id))
-        axios.delete(`http://localhost:8000/roles/${item.id}`).then(res => {
+        axios.delete(`/roles/${item.id}`).then(res => {
             console.log(res);
             getRolesData()
         })
@@ -95,7 +95,7 @@ export default function RoleList() {
             }
             return item
         }))
-        axios.patch(`http://localhost:8000/roles/${currentId}`,{
+        axios.patch(`/roles/${currentId}`,{
             rights: currentRights
         })
         .then(res=>console.log(res))

@@ -34,7 +34,7 @@ export default function UserList() {
     //获取用户数据
     const getUserList = () => {
         //roleId 1超级管理员 2区域管理员 3区域编辑
-        axios.get('http://localhost:8000/users?_expand=role').then(res => {
+        axios.get('/users?_expand=role').then(res => {
             //正常应该由后端返回角色可以看到的用户列表，但是这里是json-serve,所以需要自己筛选
             const list = res.data
             setDataSource(roleId===1?list:[
@@ -46,7 +46,7 @@ export default function UserList() {
     //获取权限列表
     const getRegionList = () => {
 
-        axios.get('http://localhost:8000/regions').then(res => {
+        axios.get('/regions').then(res => {
 
             setRegionsList(res.data)
         })
@@ -55,7 +55,7 @@ export default function UserList() {
     //获取角色列表
     const getRolesList = () => {
 
-        axios.get('http://localhost:8000/roles').then(res => {
+        axios.get('/roles').then(res => {
             
             setRolesList(res.data)
         })
@@ -123,7 +123,7 @@ export default function UserList() {
     //状态改变
     const onStateChange = (item) => {
         try {
-            axios.patch(`http://localhost:8000/users/${item.id}`, {
+            axios.patch(`/users/${item.id}`, {
                 roleState: !item.roleState
             }).then(res=>{
                 console.log('修改状态结果', res);
@@ -151,7 +151,7 @@ export default function UserList() {
         });
     }
     const deleteItem = (item) => {
-        axios.delete(`http://localhost:8000/users/${item.id}`).then(res => {
+        axios.delete(`/users/${item.id}`).then(res => {
             getUserList()
         })
     }
@@ -180,7 +180,7 @@ export default function UserList() {
             addFormRef.current.validateFields().then(values => {
                 addFormRef.current.resetFields()
                 console.log("success", values);
-                axios.post(`http://localhost:8000/users`, {
+                axios.post(`/users`, {
                     ...values,
                     "roleState": true,
                     "default": values.roleId === 1 ? true : false,
@@ -203,7 +203,7 @@ export default function UserList() {
             editFormRef.current.validateFields().then(values => {
                 
                 console.log(values);
-                axios.patch(`http://localhost:8000/users/${currentItem.id}`, values).then(res => {
+                axios.patch(`/users/${currentItem.id}`, values).then(res => {
                     console.log('更新成功', res);
                     getUserList()
                     setEditVisible(false)

@@ -10,7 +10,7 @@ export default function Login(props) {
         // console.log(values);
         //正常是用post，后端返回token，由于json-server限制，使用get代替
         //需要关联role才能获取到用户的权限
-        axios.get(`http://localhost:8000/users?username=${values.username}&password=${values.password}&roleState=true&_expand=role`)
+        axios.get(`/users?username=${values.username}&password=${values.password}&roleState=true&_expand=role`)
         .then(res=>{
             // console.log(res.data);
             if(res.data.length === 0 ) {

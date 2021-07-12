@@ -12,7 +12,7 @@ export default function RighList() {
   //获取数据
   const getData = () => {
 
-    axios.get('http://localhost:8000/rights?_embed=children').then(res => {
+    axios.get('/rights?_embed=children').then(res => {
       const list = res.data;
       list.forEach(item => {
         if (item.children?.length === 0) {
@@ -69,9 +69,9 @@ export default function RighList() {
     item.pagepermisson = item.pagepermisson === 1 ? 0 : 1
     setDataSource([...dataSource])
     if(item.grade === 1) {
-      axios.patch(`http://localhost:8000/rights/${item.id}`,{pagepermisson:item.pagepermisson})
+      axios.patch(`/rights/${item.id}`,{pagepermisson:item.pagepermisson})
     }else {
-      axios.patch(`http://localhost:8000/children/${item.id}`,{pagepermisson:item.pagepermisson})
+      axios.patch(`/children/${item.id}`,{pagepermisson:item.pagepermisson})
     }
 
   }
@@ -95,12 +95,12 @@ export default function RighList() {
     //修改当前页面状态+后端同步
     if (item.grade === 1) {
       // setDataSource(dataSource.filter(data => data.id !== item.id))
-      axios.delete(`http://localhost:8000/rights/${item.id}`).then(res => {
+      axios.delete(`/rights/${item.id}`).then(res => {
         console.log(res);
         getData()
       })
     } else {
-      axios.delete(`http://localhost:8000/children/${item.id}`).then(res => {
+      axios.delete(`/children/${item.id}`).then(res => {
         console.log('res', res);
         getData()
       })
