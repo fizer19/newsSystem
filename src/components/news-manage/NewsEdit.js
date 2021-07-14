@@ -3,7 +3,7 @@ import { Editor } from "react-draft-wysiwyg";
 import { convertToRaw } from 'draft-js'
 import draftToHtml from 'draftjs-to-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-export default function NewsEdit() {
+export default function NewsEdit(props) {
     const [editorState, setEditorState] = useState("")
     
     return (
@@ -15,7 +15,8 @@ export default function NewsEdit() {
                 editorClassName="editorClassName"
                 onEditorStateChange={editorState=>setEditorState(editorState)}
                 onBlur={()=>{
-                    console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+                    // console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+                    props.getContent(draftToHtml(convertToRaw(editorState.getCurrentContent())))
                 }}
             />
         </div>

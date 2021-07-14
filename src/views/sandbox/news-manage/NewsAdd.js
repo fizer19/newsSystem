@@ -1,34 +1,71 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { PageHeader, Steps, Button, Form, Input, Select } from 'antd'
+import { PageHeader, Steps, Button, Form, Input, Select, message, notification } from 'antd'
 import NewsEdit from '../../../components/news-manage/NewsEdit'
 import style from './News.module.css'
 import axios from 'axios'
 const { Step } = Steps
-const {Option} = Select
-export default function NewsAdd() {
+const { Option } = Select
+export default function NewsAdd(props) {
     const [currentStep, setCurrentStep] = useState(0)
     const [newsCategory, setNewsCategory] = useState([])
-    useEffect(()=>{
-        axios.get('/categories').then(res=>{
-            console.log(res.data);
+    const [formInfo, setFormInfo] = useState({})
+    const [content, setContent] = useState('')
+    useEffect(() => {
+        axios.get('/categories').then(res => {
+            // console.log(res.data);
             setNewsCategory(res.data)
         })
-    },[])
+    }, [])
     const newsRef = useRef(null)
     const handleNext = () => {
-        if(currentStep===0){
-            newsRef.current.validateFields().then(res=>{
-                console.log(res);
+        if (currentStep === 0) {
+            newsRef.current.validateFields().then(res => {
+                // console.log(res);
+                setFormInfo(res)
                 setCurrentStep(currentStep + 1)
-            }).catch(err=>{
+            }).catch(err => {
                 console.log(err);
             })
-        }else {
-            setCurrentStep(currentStep + 1)
+        } else {
+            if (content === '' || content.trim() === '<p></p>') {
+                message.error('新闻内容不能为空')
+            } else {
+
+                setCurrentStep(currentStep + 1)
+            }
+            console.log(formInfo, content);
         }
     }
+    //上一步
     const handlePrevious = () => {
         setCurrentStep(currentStep - 1)
+    }
+
+    const User = JSON.parse(localStorage.getItem('token'))
+    //点击保存或审核
+    const handleSave = (auditState) => {
+        axios.post('/news', {
+            ...formInfo,
+            content,
+            region: User.region ? User.region : '全球',
+            author: User.username,
+            roleId: User.roleId,
+            auditState,
+            publishState: 2,
+            createTime: Date.now(),
+            star: 0,
+            view: 0,
+            id: 1,
+            // publishTime: 0
+        }).then(res => {
+            console.log(res);
+            props.history.push(auditState===0?'/news-manage/draft':'/audit-manage/list')
+            notification.info({
+                message: `通知`,
+                description: `您可以在${auditState===0?'草根箱':'审核列表'}中查看您的新闻`,
+                placement:"bottomRight",
+            });
+        })
     }
     return (
         <div>
@@ -68,7 +105,7 @@ export default function NewsAdd() {
                         >
                             <Select>
                                 {
-                                    newsCategory.map(item=>{
+                                    newsCategory.map(item => {
                                         return <Option value={item.id} key={item.id}>{item.title}</Option>
                                     })
                                 }
@@ -77,7 +114,9 @@ export default function NewsAdd() {
                     </Form>
                 </div>
                 <div className={currentStep === 1 ? '' : style.active}>
-                    <NewsEdit></NewsEdit>
+                    <NewsEdit getContent={(value) => {
+                        setContent(value)
+                    }}></NewsEdit>
                 </div>
                 <div className={currentStep === 2 ? '' : style.active}>
                     222<input type="text"></input>
@@ -86,8 +125,8 @@ export default function NewsAdd() {
             <div style={{ marginTop: '50px' }}>
                 {
                     currentStep === 2 && <span>
-                        <Button type="primary">保存草稿</Button>
-                        <Button danger>提交审核</Button></span>
+                        <Button type="primary" onClick={handleSave(0)}>保存草稿</Button>
+                        <Button danger onClick={handleSave(1)}>提交审核</Button></span>
                 }
                 {
                     currentStep < 2 && <Button type="primary" onClick={handleNext}>下一步</Button>
