@@ -44,28 +44,38 @@ export default function NewsAdd(props) {
     const User = JSON.parse(localStorage.getItem('token'))
     //点击保存或审核
     const handleSave = (auditState) => {
-        axios.post('/news', {
-            ...formInfo,
-            content,
-            region: User.region ? User.region : '全球',
-            author: User.username,
-            roleId: User.roleId,
-            auditState,
-            publishState: 2,
-            createTime: Date.now(),
-            star: 0,
-            view: 0,
-            id: 1,
-            // publishTime: 0
-        }).then(res => {
-            console.log(res);
-            props.history.push(auditState===0?'/news-manage/draft':'/audit-manage/list')
-            notification.info({
-                message: `通知`,
-                description: `您可以在${auditState===0?'草根箱':'审核列表'}中查看您的新闻`,
-                placement:"bottomRight",
-            });
-        })
+        try {
+            axios.post('/news', {
+                ...formInfo,
+                content,
+                region: User.region ? User.region : '全球',
+                author: User.username,
+                roleId: User.roleId,
+                auditState,
+                publishState: 2,
+                createTime: Date.now(),
+                star: 0,
+                view: 0,
+                
+                // publishTime: 0
+            }).then(res => {
+                console.log(res);
+                if(res?.status === 201) {
+                    message.success('提交成功')
+                    props.history.push(auditState===0?'/news-manage/draft':'/audit-manage/list')
+                    notification.info({
+                        message: `通知`,
+                        description: `您可以在${auditState===0?'草根箱':'审核列表'}中查看您的新闻`,
+                        placement:"bottomRight",
+                    });
+                }else {
+                    message.error('提交失败')
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
     return (
         <div>
@@ -119,14 +129,14 @@ export default function NewsAdd(props) {
                     }}></NewsEdit>
                 </div>
                 <div className={currentStep === 2 ? '' : style.active}>
-                    222<input type="text"></input>
+                    
                 </div>
             </div>
             <div style={{ marginTop: '50px' }}>
                 {
                     currentStep === 2 && <span>
-                        <Button type="primary" onClick={handleSave(0)}>保存草稿</Button>
-                        <Button danger onClick={handleSave(1)}>提交审核</Button></span>
+                        <Button type="primary" onClick={()=>handleSave(0)}>保存草稿</Button>
+                        <Button danger onClick={()=>handleSave(1)}>提交审核</Button></span>
                 }
                 {
                     currentStep < 2 && <Button type="primary" onClick={handleNext}>下一步</Button>

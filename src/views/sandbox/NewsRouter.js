@@ -9,6 +9,8 @@ import RighList from './right-manage/RighList'
 import NewsAdd from './news-manage/NewsAdd'
 import NewsCategory from './news-manage/NewsCategory'
 import NewsDraft from './news-manage/NewsDraft'
+import NewsPreview from './news-manage/NewsPreview'
+import NewsUpdate from './news-manage/NewsUpdate'
 import Audit from './audit-manage/Audit'
 import AuditList from './audit-manage/AuditList'
 import Published from './publish-manage/Published'
@@ -29,6 +31,8 @@ const LocalRouterMap = {
     "/news-manage/add": NewsAdd,
     "/news-manage/draft": NewsDraft,
     "/news-manage/category": NewsCategory,
+    "/news-manage/preview/:id": NewsPreview,
+    "/news-manage/update/:id": NewsUpdate,
     "/audit-manage/audit": Audit,
     "/audit-manage/list": AuditList,
     "/publish-manage/unpublished": Unpublished,
@@ -39,18 +43,23 @@ const LocalRouterMap = {
 export default function NewsRouter() {
     const [routerList, setRouterList] = useState([])
     useEffect(()=>{
-        Promise.all([
-            axios.get('/rights'),
-            axios.get('/children')
-        ]).then(res => {
-            
-            setRouterList([...res[0].data,...res[1].data])
-        })
+        try {
+            Promise.all([
+                axios.get('/rights'),
+                axios.get('/children')
+            ]).then(res => {
+                
+                setRouterList([...res[0].data,...res[1].data])
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        
     },[])
 
     const checkRoute = (item) => {
         //本地路由对照表中是否包含该路由，以及该路由是否启用，pagepermisson为0表示禁用，1表示启用
-        return LocalRouterMap[item.key] && item.pagepermisson
+        return LocalRouterMap[item.key] && (item.pagepermisson || item.routepermisson)
     }
 
     const checkUserRight = (item) => {

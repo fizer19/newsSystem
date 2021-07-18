@@ -22,9 +22,19 @@ const iconList = {
 function SideMenu(props) {
   const [menu,setMenu] = React.useState([])
   React.useEffect(() => {
-    axios.get("/rights?_embed=children").then(res => {
-      setMenu(res.data)
-    })
+    try {
+      axios.get("/rights?_embed=children").then(res => {
+        if(res) {
+
+          setMenu(res.data)
+        }
+        
+        
+      })
+    } catch (error) {
+      console.log(error);
+    }
+    
   },[])
   const {role:{rights}} = JSON.parse(localStorage.getItem('token'))
   
