@@ -20,7 +20,7 @@ export default function NewsAdd(props) {
     const handleNext = () => {
         if (currentStep === 0) {
             newsRef.current.validateFields().then(res => {
-                // console.log(res);
+                console.log(res);
                 setFormInfo(res)
                 setCurrentStep(currentStep + 1)
             }).catch(err => {
@@ -52,7 +52,7 @@ export default function NewsAdd(props) {
                 author: User.username,
                 roleId: User.roleId,
                 auditState,
-                publishState: 2,
+                publishState: 0,
                 createTime: Date.now(),
                 star: 0,
                 view: 0,

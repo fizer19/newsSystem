@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Button, Modal } from 'antd'
+import { Table, Button, Modal, notification,message } from 'antd'
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, ArrowUpOutlined } from '@ant-design/icons'
 import axios from 'axios'
 const { confirm } = Modal
@@ -62,8 +62,8 @@ export default function NewsList(props) {
       render: (item) => {
         return <div>
           <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => onDelete(item)} />
-          <Button  type="primary" shape="circle" icon={<EditOutlined />} onClick={() => {props.history.push(`/news-manage/update/${item.id}`)}} />
-          <Button  type="primary" shape="circle" icon={<ArrowUpOutlined />} onClick={() => onDelete(item)} />
+          <Button   shape="circle" icon={<EditOutlined />} onClick={() => {props.history.push(`/news-manage/update/${item.id}`)}} />
+          <Button  type="primary" shape="circle" icon={<ArrowUpOutlined />} onClick={() => onCheck(item.id)} />
           
           
         </div>
@@ -96,12 +96,26 @@ export default function NewsList(props) {
         })
     } catch (error) {
         console.log(error);
+        
     }
-      
-
-
-    
-
+  }
+  const onCheck = (id) => {
+    axios.patch(`/news/${id}`,{
+      auditState:1
+    }).then(res=>{
+      console.log(res);
+      if(res?.status === 200) {
+        message.success('提交成功')
+        props.history.push('/audit-manage/list')
+        notification.info({
+            message: `通知`,
+            description: `您可以在审核列表中查看您的新闻`,
+            placement:"bottomRight",
+        });
+    }else {
+        message.error('提交失败')
+    }
+    })
   }
 
   return (

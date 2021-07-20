@@ -35,7 +35,7 @@ export default function NewsAdd(props) {
         } catch (error) {
             console.log(error);
         }
-    },[])
+    },[props.match.params.id])
     const newsRef = useRef(null)
     const handleNext = () => {
         if (currentStep === 0) {
@@ -61,26 +61,19 @@ export default function NewsAdd(props) {
         setCurrentStep(currentStep - 1)
     }
 
-    const User = JSON.parse(localStorage.getItem('token'))
+    // const User = JSON.parse(localStorage.getItem('token'))
     //点击保存或审核
     const handleSave = (auditState) => {
         try {
-            axios.post('/news', {
+            axios.patch(`/news/${props.match.params.id}`, {
                 ...formInfo,
                 content,
-                region: User.region ? User.region : '全球',
-                author: User.username,
-                roleId: User.roleId,
                 auditState,
-                publishState: 2,
-                createTime: Date.now(),
-                star: 0,
-                view: 0,
                 
                 // publishTime: 0
             }).then(res => {
                 console.log(res);
-                if(res?.status === 201) {
+                if(res?.status === 200) {
                     message.success('提交成功')
                     props.history.push(auditState===0?'/news-manage/draft':'/audit-manage/list')
                     notification.info({
