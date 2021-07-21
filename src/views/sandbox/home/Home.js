@@ -37,7 +37,9 @@ export default function Home() {
     }
     return (
         <div>
-            <button onClick={OnButtonClk}>按钮</button>
+            {/* <button onClick={OnButtonClk}>按钮</button> */}
+            <div>测试</div>
+            
         </div>
     )
 }
