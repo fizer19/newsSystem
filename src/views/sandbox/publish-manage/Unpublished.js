@@ -1,9 +1,12 @@
-import React from 'react'
-
-export default function Unpublished() {
+import usePublish from '../../../components/publish-manage/usePublish'
+import NewsPublish from '../../../components/publish-manage/NewsPublish'
+import {Button} from 'antd'
+export default function UnPublished() {
+    //1 待发布
+    const {dataSource,handlePublish} = usePublish(1)
     return (
         <div>
-            Unpublished
+            <NewsPublish dataSource={dataSource} button={(id)=><Button onClick={()=>handlePublish(id)} type="primary">上线</Button>}></NewsPublish>
         </div>
     )
 }

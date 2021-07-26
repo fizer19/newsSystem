@@ -11,7 +11,7 @@ axios.interceptors.request.use((config) => {
 })
 axios.interceptors.response.use(
     response => {
-        console.log('aaaa');
+        // console.log('aaaa');
         NProgress.done()
         return response
     },
