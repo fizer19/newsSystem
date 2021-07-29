@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { Route, Switch, Redirect } from 'react-router-dom'
-
+import {Spin} from 'antd'
 import Home from './home/Home'
 import UserList from './user-manage/UserList'
 import RoleList from './right-manage/RoleList'
@@ -20,7 +20,7 @@ import Sunset from './publish-manage/Sunset'
 import Notfound from './notfound/Notfound'
 import axios from 'axios'
 
-
+import { connect } from 'react-redux'
 
 const LocalRouterMap = {
     "/home": Home,
@@ -40,7 +40,7 @@ const LocalRouterMap = {
     "/publish-manage/sunset": Sunset
 
 }
-export default function NewsRouter() {
+function NewsRouter(props) {
     const [routerList, setRouterList] = useState([])
     useEffect(()=>{
         try {
@@ -68,23 +68,33 @@ export default function NewsRouter() {
         return rights.includes(item.key)
     }
     return (
-        <Switch>
-            {
-                routerList.map(item=>{
-                    if(checkRoute(item) && checkUserRight(item)) {
+        <Spin size="large" spinning={props.loading}>
 
-                        // 要使用严格匹配
-                        return <Route exact path={item.key} key={item.key} component={LocalRouterMap[item.key]}></Route>
-                    }
-                    return null
-                })
-            }
-            <Redirect from="/" to="/home" exact />
-            {
-                //如果网速慢，会先渲染routerList是空数组，会先渲染Notfound组件，所以判断一下routerList是否为空
-                routerList.length>0 && <Route path="*" component={Notfound} />
-            }
-            
-        </Switch>
+            <Switch>
+                {
+                    routerList.map(item=>{
+                        if(checkRoute(item) && checkUserRight(item)) {
+
+                            // 要使用严格匹配
+                            return <Route exact path={item.key} key={item.key} component={LocalRouterMap[item.key]}></Route>
+                        }
+                        return null
+                    })
+                }
+                <Redirect from="/" to="/home" exact />
+                {
+                    //如果网速慢，会先渲染routerList是空数组，会先渲染Notfound组件，所以判断一下routerList是否为空
+                    routerList.length>0 && <Route path="*" component={Notfound} />
+                }
+                
+            </Switch>
+        </Spin>
     )
 }
+const mapStateToProps = (state) => {
+    const {loadingReducer:{loading}} = state
+    return {
+      loading,
+    }
+  }
+export default connect(mapStateToProps)(NewsRouter)

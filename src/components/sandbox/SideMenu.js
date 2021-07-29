@@ -2,6 +2,7 @@ import React from 'react'
 import './index.css'
 import { withRouter } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
+import { connect } from 'react-redux';
 import {
   HomeOutlined,
   UserOutlined,
@@ -16,8 +17,22 @@ const iconList = {
   "/home":<HomeOutlined />,
   "/user-manage": <UserOutlined />,
   "/user-manage/list": <UserOutlined />,
-  "right-manage": <UserOutlined />,
-  "right-manage/role/list": <UserOutlined />
+  "/right-manage": <UserOutlined />,
+  "/right-manage/role/list": <UserOutlined />,
+  "/right-manage/right/list": <UserOutlined />,
+  "/news-manage": <UserOutlined />,
+  "/news-manage/add": <UserOutlined />,
+  "/news-manage/draft": <UserOutlined />,
+  "/news-manage/category": <UserOutlined />,
+  "/audit-manage": <UserOutlined />,
+  "/audit-manage/audit": <UserOutlined />,
+  "/audit-manage/list": <UserOutlined />,
+  "/publish-manage": <UserOutlined />,
+  "/publish-manage/unpublished": <UserOutlined />,
+  "/publish-manage/published": <UserOutlined />,
+  "/publish-manage/sunset": <UserOutlined />,
+
+
 }
 function SideMenu(props) {
   const [menu,setMenu] = React.useState([])
@@ -62,9 +77,9 @@ function SideMenu(props) {
   //默认展开菜单
   const openKeys = ['/' + props.location.pathname.split('/')[1]]
   return (
-    <Sider trigger={null} collapsible collapsed={false}>
+    <Sider trigger={null} collapsible collapsed={props.collapsed}>
       <div style={{height:"100%",display:"flex",flexDirection:"column"}}>
-        <div className="logo">全球新闻发布系统</div>
+        {props.collapsed?<div className="logo"></div>:<div className="logo">全球新闻发布系统</div>}
         <Menu style={{flex:1,"overflow":"auto"}} theme="dark" mode="inline" defaultOpenKeys={openKeys} selectedKeys={selectKeys}>
           {renderMenu(menu)}
         </Menu>
@@ -72,4 +87,11 @@ function SideMenu(props) {
     </Sider>
   )
 }
-export default withRouter(SideMenu)
+const mapStateToProps = (state) => {
+  const {collapsedReducer:{collapsed}} = state
+  return {
+    collapsed:collapsed
+  }
+}
+
+export default connect(mapStateToProps)(withRouter(SideMenu))
