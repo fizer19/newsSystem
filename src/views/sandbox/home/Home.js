@@ -1,43 +1,74 @@
-import React from 'react'
-import axios from 'axios'
+import React, {useEffect,useState} from 'react'
+import { Card, Col, Row, List, Avatar  } from 'antd';
+import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import axios from 'axios';
+
+const { Meta } = Card;
 export default function Home() {
-    const OnButtonClk = () => {
-        //获取数据
-        // axios.get('/posts').then(res => {
-        //     console.log(res);
-        // })
-        //新增数据
-        // axios.post('/posts',{
-        //     "title": "test",
-        //      "author": "fizer"
-        // }).then(res => {
-        //     console.log(res);
-        // })
-
-        //修改 put  替换掉
-        // axios.put('/posts/1',{
-        //     title:'修改'
-        // })
-
-        //修改 patch  局部替换
-        // axios.patch('/posts/1',{title: 'patch修改'})
-
-        //删除
-        // axios.delete('/posts/1')  //删除一项数据，与之关联的数据也可以同时删除
-
-        //_embed 向下关联数据
-        // axios.get('/posts?_embed=comments').then(res => {
-        //     console.log(res);
-        // })
-
-        //_expand 向上关联数据
-        axios.get('/comments?_expand=post').then(res => {
-            console.log(res);
+    const [viewList, setViewList] = useState([])
+    const [startList, setStartList] = useState([])
+    useEffect(()=>{
+        axios.get('/news?publishState=2&_expand=category&_sort=view&_order=desc&_limit=6').then(res=>{
+            //console.log(res);
+            setViewList(res.data)
         })
-    }
+    },[])
+    useEffect(()=>{
+        axios.get('/news?publishState=2&_expand=category&_sort=star&_order=desc&_limit=6').then(res=>{
+            //console.log(res);
+            setStartList(res.data)
+        })
+    },[])
+    const {username,region,role:{roleName}} = JSON.parse(localStorage.getItem('token'))
     return (
         <div>
-            <button onClick={OnButtonClk}>按钮</button>
+            <Row gutter={16}>
+                <Col span={8}>
+                    <Card title="用户最常浏览" bordered={true}>
+                        <List
+                            size="small"
+                            bordered
+                            dataSource={viewList}
+                            renderItem={item => <List.Item><a href={`#/news-manage/preview/${item.id}`}>{item.title}</a></List.Item>}
+                        />
+                    </Card>
+                </Col>
+                <Col span={8}>
+                    <Card title="用户点赞最多" bordered={true}>
+                        <List
+                            size="small"
+                            bordered
+                            dataSource={startList}
+                            renderItem={item => <List.Item><a href={`#/news-manage/preview/${item.id}`}>{item.title}</a></List.Item>}
+                        />
+                    </Card>
+                </Col>
+                <Col span={8}>
+                    <Card
+                        
+                        cover={
+                            <img
+                                alt="example"
+                                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                            />
+                        }
+                        actions={[
+                            <SettingOutlined key="setting" />,
+                            <EditOutlined key="edit" />,
+                            <EllipsisOutlined key="ellipsis" />,
+                        ]}
+                    >
+                        <Meta
+                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                            title={username}
+                            description={<div>
+                                <b>{region?region:'全球'}</b>
+                                <span style={{paddingLeft: '30px'}}>{roleName}</span>
+                            </div>}
+                        />
+                    </Card>
+                </Col>
+            </Row>
         </div>
     )
 }

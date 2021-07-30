@@ -68,4 +68,5 @@ const mapDispatchToProps = {
     }
   }
 }
+//withRouter是让非路由组件可以使用路由组件一样的api
 export default connect(mapStateToProps,mapDispatchToProps)(withRouter(TopHeader))

@@ -103,7 +103,7 @@ export default function NewsList(props) {
     axios.patch(`/news/${id}`,{
       auditState:1
     }).then(res=>{
-      console.log(res);
+      //console.log(res);
       if(res?.status === 200) {
         message.success('提交成功')
         props.history.push('/audit-manage/list')

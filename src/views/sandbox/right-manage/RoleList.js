@@ -15,13 +15,13 @@ export default function RoleList() {
     }, [])
     const getRolesData = () => {
         axios.get('/roles').then(res => {
-            // console.log(res);
+            // //console.log(res);
             setDataSource(res.data)
         }).catch(err => console.log(err))
     }
     const getRightsData = () => {
         axios.get('/rights?_embed=children').then(res => {
-            // console.log(res);
+            // //console.log(res);
             setRightsList(res.data)
         }).catch(err => console.log(err))
     }
@@ -72,7 +72,7 @@ export default function RoleList() {
 
         // setDataSource(dataSource.filter(data => data.id !== item.id))
         axios.delete(`/roles/${item.id}`).then(res => {
-            console.log(res);
+            //console.log(res);
             getRolesData()
         })
 

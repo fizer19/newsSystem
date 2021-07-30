@@ -96,7 +96,7 @@ export default function RighList() {
     if (item.grade === 1) {
       // setDataSource(dataSource.filter(data => data.id !== item.id))
       axios.delete(`/rights/${item.id}`).then(res => {
-        console.log(res);
+        //console.log(res);
         getData()
       })
     } else {

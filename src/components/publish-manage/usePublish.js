@@ -6,7 +6,7 @@ export default function usePublish(type) {
     useEffect(() => {
         axios.get(`/news?author=${username}&publishState=${type}&_expand=category`).then(res => {
             setdataSource(res.data)
-            console.log(res);
+            //console.log(res);
         })
     }, [username, type])
     const [dataSource, setdataSource] = useState([])

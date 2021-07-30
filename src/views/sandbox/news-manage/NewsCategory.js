@@ -13,7 +13,7 @@ export default function NewsCategory() {
   const getData = () => {
 
     axios.get('/categories').then(res => {
-      console.log(res);
+      //console.log(res);
       setDataSource(res.data)
     })
   }

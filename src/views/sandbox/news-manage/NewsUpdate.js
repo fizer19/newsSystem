@@ -40,7 +40,7 @@ export default function NewsAdd(props) {
     const handleNext = () => {
         if (currentStep === 0) {
             newsRef.current.validateFields().then(res => {
-                // console.log(res);
+                // //console.log(res);
                 setFormInfo(res)
                 setCurrentStep(currentStep + 1)
             }).catch(err => {
@@ -72,7 +72,7 @@ export default function NewsAdd(props) {
                 
                 // publishTime: 0
             }).then(res => {
-                console.log(res);
+                //console.log(res);
                 if(res?.status === 200) {
                     message.success('提交成功')
                     props.history.push(auditState===0?'/news-manage/draft':'/audit-manage/list')
