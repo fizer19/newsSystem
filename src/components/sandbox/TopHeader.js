@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 const { Header } = Layout
 function TopHeader(props) {
-  console.log(props);
+  
   
   const changeCollapsed = () => {
     props.changeCollapsed()
